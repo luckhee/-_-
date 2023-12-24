@@ -1,0 +1,41 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 20px;
+    background-color: #f0f0f0;
+}
+
+h1 {
+    margin-bottom: 30px;
+    color: #007BFF;
+}
+
+#startSpeechRecognition {
+    font-size: 24px;
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#startSpeechRecognition:hover {
+    background-color: #0056b3;
+}
+
+#output {
+    font-size: 20px;
+    margin-top: 30px;
+}
+
+#eventsList {
+    list-style-type: none;
+    padding: 0;
+    margin-top: 30px;
+}
+
+#eventsList li {
+    font-size: 18px;
+    margin-bottom: 10px;
+}

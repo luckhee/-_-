@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Call</title>
+</head>
+<body>
+    <h1>Voice Call</h1>
+    <p>마이크에 "정국이"라고 말해주세요.</p>
+    <button onclick="startListening()">음성으로 호출</button>
+    <div id="output"></div>
+    <div id="phpResponseContainer"></div> <!-- 결과가 출력될 div -->
+    <script>
+        function startListening() {
+            // Web Speech API를 지원하는지 확인
+            if ('webkitSpeechRecognition' in window) {
+                const recognition = new webkitSpeechRecognition();
+                recognition.lang = 'ko-KR'; // 인식할 언어 설정 (한국어)
+
+                recognition.onstart = function () {
+                    console.log('음성 인식 시작');
+                };
+
+                recognition.onresult = function (event) {
+                    const transcript = event.results[0][0].transcript;
+                    console.log('인식된 음성:', transcript);
+                    document.getElementById('output').innerHTML = '인식된 음성: ' + transcript;
+
+                    // PHP로 음성 인식 결과를 전송하고 처리하는 코드
+                    const xhr = new XMLHttpRequest();
+                    xhr.onreadystatechange = function () {
+                        if (xhr.readyState === XMLHttpRequest.DONE) {
+                            if (xhr.status === 200) {
+                                console.log('PHP 처리 결과:', xhr.responseText);
+                               // PHP 처리 결과를 HTML 페이지에 추가
+                                var responseContainer = document.getElementById("phpResponseContainer");
+                                responseContainer.innerHTML = "<h2>PHP 처리 결과</h2><p>" + xhr.responseText + "</p>";
+                                // PHP 처리 결과를 여기에서 사용하거나 화면에 표시할 수 있습니다.
+                            } else {
+                                console.error('Error:', xhr.status, xhr.statusText);
+                            }
+                        }
+                    };
+
+                    // PHP 파일의 경로를 수정해주세요.
+                    xhr.open('POST', 'voice_call.php', true);
+                    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                    xhr.send('search_name=' + encodeURIComponent(transcript));
+                };
+
+                recognition.onend = function () {
+                    console.log('음성 인식 종료');
+                };
+
+                recognition.onerror = function (event) {
+                    console.error('음성 인식 오류:', event.error);
+                };
+
+                recognition.start();
+            } else {
+                alert('Web Speech API를 지원하지 않는 브라우저입니다.');
+            }
+        }
+    </script>
+</body>
+</html>
